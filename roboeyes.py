@@ -1,20 +1,29 @@
-# Author: Iqbal Mohomed
-# Notice: This code is provided as is - no warranties
-#
-# For details on the project, see my personal blog: slowping.com
-# This is a personal project done on my own time. 
-#
-# 
-# Python version: 2.6
-# Libraries used: pyBrain, nxt-python (v2.2.1), PIL (Python Image Libary)
-#
-# This code has been used successfully on Windows 7. 
-# On Mac OS X (Snow Leopard), the SynchronizedMotors class has given me some grief.
-#
-# Initially, I've placed all my code into this file. I hope to clean it up as I get time.
-#
-# Have fun!!
+'''
+    Author: Iqbal Mohomed
+    Notice: This code is provided as is - no warranties
+    
+    For details on the project, see my personal blog: slowping.com
+    This is a personal project done on my own time. 
 
+    Python version: 2.6
+    Libraries used: pyBrain, nxt-python (v2.2.1), PIL (Python Image Libary)
+    This code has been used successfully on Windows 7. 
+    On Mac OS X (Snow Leopard), the SynchronizedMotors class has given me some grief.
+    Initially, I've placed all my code into this file. I hope to clean it up as I get time.
+     Have fun!!
+'''
+
+'''
+    Modified by: Alexander Moriarty
+    Python 2.7.3 Ubuntu 12.04
+    Python 2.7 Mac OS X 10.8.2
+
+    Found project here:
+    http://pyvideo.org/video/1195/self-driving-lego-mindstorms-robot
+    wanted to play with it.
+'''
+
+import ConfigParser
 import nxt
 import sys
 import time
@@ -27,9 +36,20 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 
-net = buildNetwork(10000,64,3,bias=True)
-ds = SupervisedDataSet(10000,3)
-f = open('training.txt','r')
+# Get Values from Configuration File
+
+config = ConfigParser.ConfigParser()
+config.read('selfdrivingrobot.cfg')
+
+nn_in_size = config.get("nnet","input-layer-size")
+nn_hidden_size = config.get("nnet","hidden-layer-size")
+nn_out_size = config.get("nnet","output-layer-size")
+tfile = config.get("training","tfile")
+
+
+net = buildNetwork(nn_in_size,nn_hidden_size,nn_out_size,bias=True)
+ds = SupervisedDataSet(nn_in_size,nn_out_size)
+f = open(tfile,'r')
 st=f.readlines()
 print len(st)
 
